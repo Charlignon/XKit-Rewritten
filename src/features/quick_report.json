@@ -1,0 +1,17 @@
+{
+  "title": "Quick Report",
+  "description": "Report a post for spam",
+  "icon": {
+    "class_name": "ri-user-unfollow-line",
+    "color": "white",
+    "background_color": "#b5241c"
+  },
+  "help": "https://github.com/Charlignon/XKit-Rewritten",
+  "preferences": {
+    "manageBlockedPosts": {
+      "type": "iframe",
+      "label": "Manage blocked posts",
+      "src": "/features/quick_report/options/index.html"
+    }
+  }
+}

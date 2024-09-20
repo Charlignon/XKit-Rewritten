@@ -2,7 +2,7 @@ const postsBlockedCount = document.getElementById('posts-blocked-count');
 const blockedPostList = document.getElementById('blocked-posts');
 const blockedPostTemplate = document.getElementById('blocked-post');
 
-const storageKey = 'postblock.blockedPostRootIDs';
+const storageKey = 'quickreport.blockedPostRootIDs';
 
 const unblockPost = async function ({ currentTarget }) {
   let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);

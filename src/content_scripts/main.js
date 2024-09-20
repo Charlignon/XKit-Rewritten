@@ -127,5 +127,8 @@
 
   if (redpop) {
     isReactLoaded() ? init() : waitForReactLoaded().then(init);
+  } else if (window.location.pathname === '/abuse/start') {
+    console.log('Refreshing tumblr_form_key value');
+    window.localStorage.setItem('xkit.tumblr_form_key', document.getElementById('tumblr_form_key').content);
   }
 }
