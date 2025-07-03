@@ -15,6 +15,9 @@ const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
 
+const blogNameRegex = /[a-z0-9-]{3,}/;
+const blogSelectorObserver = new MutationObserver(() => displayBundlesMatchingBlogName(postOptionPopupElement, getBlogNameOnPostEditor()));
+
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
@@ -60,6 +63,10 @@ let editedTagsMap = new WeakMap();
 const createBundleButton = tagBundle => {
   const bundleButton = dom('button', null, null, [tagBundle.title]);
   bundleButton.dataset.tags = tagBundle.tags;
+  if (tagBundle.group) {
+    bundleButton.dataset.group = tagBundle.group;
+    bundleButton.classList.add('hidden', 'grouped');
+  }
   return bundleButton;
 };
 
@@ -113,6 +120,18 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
+const displayBundlesMatchingBlogName = async (popup, blogName) => {
+  if (!blogName) { return; }
+
+  for (const bundleButton of popup.querySelectorAll('button')) {
+    if (bundleButton.dataset.group === blogName) {
+      bundleButton.classList.remove('hidden');
+    } else if (bundleButton.dataset.group) { // Neither null, undefined nor empty
+      bundleButton.classList.add('hidden');
+    }
+  }
+};
+
 const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
@@ -122,7 +141,21 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
     buttonContainer.removeChild(popupElement);
   } else {
     appendWithoutOverflow(popupElement, buttonContainer);
+
+    const postElement = popupElement.closest(postSelector);
+    const { blogName } = await timelineObject(postElement);
+    displayBundlesMatchingBlogName(popupElement, blogName);
   }
+};
+
+const getBlogSelectorButton = () => {
+  const glassContainer = document.getElementById('glass-container');
+  const selectedBlogAvatar = glassContainer?.querySelectorAll("[alt='Avatar']")?.[0];
+  return selectedBlogAvatar?.closest('button');
+};
+const getBlogNameOnPostEditor = () => {
+  const blogSelectorButton = getBlogSelectorButton();
+  return blogNameRegex.exec(blogSelectorButton?.textContent)?.[0];
 };
 
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
@@ -131,7 +164,15 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   if (currentTarget.contains(postOptionPopupElement)) {
     currentTarget.removeChild(postOptionPopupElement);
   } else {
+    blogSelectorObserver.disconnect();
     appendWithoutOverflow(postOptionPopupElement, currentTarget);
+
+    displayBundlesMatchingBlogName(postOptionPopupElement, getBlogNameOnPostEditor());
+
+    blogSelectorObserver.observe(getBlogSelectorButton(), {
+      attributes: true,
+      attributeFilter: ['aria-label']
+    });
   }
 };
 
@@ -185,6 +226,13 @@ const processFormSubmit = function ({ currentTarget }) {
 
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
+
+  if (target.classList.contains('quick-tags-group-button')) {
+    target.classList.toggle('active');
+    const tagsButtons = target.parentNode.parentNode.querySelectorAll(':scope > button'); // Fixme not 100% supported
+    tagsButtons.forEach(b => b.classList.toggle('hidden'));
+    return;
+  }
 
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
@@ -288,6 +336,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processPostForm);
+  blogSelectorObserver.disconnect();
   popupElement.remove();
 
   unregisterPostOption('quick-tags');

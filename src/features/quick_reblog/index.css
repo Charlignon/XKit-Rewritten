@@ -121,6 +121,10 @@ div:first-child + span + #quick-reblog,
   opacity: 0.65;
 }
 
+#quick-reblog .quick-tags button.grouped {
+  background-color: var(--accent-tint);
+}
+
 #quick-reblog .quick-tags button:hover {
   background-color: rgb(var(--secondary-accent));
   opacity: 1;

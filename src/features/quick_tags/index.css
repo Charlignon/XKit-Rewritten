@@ -63,6 +63,14 @@
   margin: 2px 0;
 }
 
+:is(#quick-tags, #quick-tags-post-option) .hidden {
+  display: none;
+}
+
+:is(#quick-tags, #quick-tags-post-option) .grouped {
+  background-color: var(--accent-tint); /* tumblr vars */
+}
+
 #quick-tags input {
   box-sizing: border-box;
   width: 0;

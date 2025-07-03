@@ -17,7 +17,21 @@
           <input id="new-bundle-title" name="title" type="text" autocomplete="off" placeholder="My tag bundle" required>
           <label for="new-bundle-tags">Tags</label>
           <input id="new-bundle-tags" name="tags" type="text" autocomplete="off" placeholder="tag1, tag2, tag3" required>
+          <label for="new-bundle-group">Group</label>
+          <select id="new-bundle-group" class="group-select" name="group" type="text">
+            <option value="">-Choose a tag group (optional)-</option>
+          </select>
           <button type="submit">Add bundle</button>
+        </form>
+      </section>
+      <section>
+        <h3>Tag groups</h3>
+        <form id="new-group">
+          <label for="new-group-name">Add a group</label>
+          <input id="new-group-name" name="name" type="text" placeholder="Group name or blogName" autocomplete="off"
+                 required>
+          <input type="submit" hidden>
+          <div id="groups"></div>
         </form>
       </section>
       <section>
@@ -29,15 +43,31 @@
     <template id="bundle-template">
       <li class="bundle">
         <button class="drag-handle" title="Drag to rearrange"><i class="ri-draggable"></i></button>
-        <div>
-          <input class="title" type="text" disabled required>
-          <input class="tags" type="text" disabled required>
+        <div class="bundle-view">
+          <span class="title"></span>
+          <span class="group"></span>
+          <br/>
+          <span class="tags"></span>
+        </div>
+        <div class="bundle-edit hidden">
+          <input class="title" type="text" required>
+          <input class="tags" type="text" required>
+          <input class="group" type="text" hidden>
         </div>
         <span class="controls">
           <button class="edit" title="Edit tag bundle"><i class="ri-pencil-line"></i></button>
           <button class="delete" title="Delete tag bundle"><i class="ri-delete-bin-line"></i></button>
         </span>
       </li>
+    </template>
+
+    <template id="group-template">
+      <div class="group">
+        <span class="name"></span>
+        <span class="controls">
+          <button class="delete" title="Delete group"><i class="ri-close-line"></i></button>
+        </span>
+      </div>
     </template>
 
     <script src="/action/resize_frames.js" defer></script>

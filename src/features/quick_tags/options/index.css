@@ -43,7 +43,7 @@ h3 {
   margin-bottom: 1rem;
 }
 
-input[type="text"] {
+input[type="text"], select {
   padding: 4px 8px;
   border: none;
   border-radius: 3px;
@@ -52,20 +52,20 @@ input[type="text"] {
   color: rgb(var(--black));
 }
 
-#new-bundle {
+#new-bundle, #new-group {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   grid-column-gap: 1rem;
   grid-row-gap: 0.5rem;
   align-items: center;
   margin: 0;
 }
 
-#new-bundle label {
+#new-bundle label, #new-group label {
   grid-column: 1;
 }
 
-#new-bundle input {
+#new-bundle input, #new-group input, #new-group #groups {
   grid-column: 2;
 }
 
@@ -100,7 +100,7 @@ input[type="text"] {
   border-bottom: 1px solid rgb(var(--light-grey));
 }
 
-.bundle button {
+.bundle button, .group button {
   padding: 3px;
   border: none;
 
@@ -108,7 +108,7 @@ input[type="text"] {
   background: none;
 }
 
-.bundle button i {
+.bundle button i, .group button i {
   color: rgb(var(--black));
   font-size: 1.5em;
 }
@@ -121,7 +121,29 @@ input[type="text"] {
   cursor: grabbing;
 }
 
-.bundle div {
+.bundle .hidden {
+  display: none !important;
+}
+
+.bundle-view {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1ch 0;
+  gap: 1ch;
+  align-items: baseline;
+}
+
+.bundle-view .group {
+  background-color: rgb(var(--dark-grey));
+  border-radius: 4px;
+  padding-block: 4px;
+  padding-inline: 8px;
+}
+.bundle-view .tags {
+  width: 100%;
+}
+
+.bundle-edit {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -129,26 +151,25 @@ input[type="text"] {
   padding: 1ch 0;
 }
 
-.bundle .title {
+.bundle input:not(:disabled) {
   margin-bottom: 0.5ch;
 }
 
-.bundle input {
+.bundle input, .bundle select {
   box-sizing: border-box;
   width: 0;
   min-width: 100%;
 }
 
-.bundle input:disabled {
+.bundle .bundle-view span {
   overflow-x: hidden;
   border: none;
 
   color: rgb(var(--black));
-  background: transparent;
   text-overflow: ellipsis;
 }
 
-.bundle input.title:disabled {
+.bundle span.title {
   font-weight: bold;
 }
 
@@ -161,4 +182,38 @@ input[type="text"] {
 
 .bundle .controls > :not(:first-child) {
   margin-left: 1ch;
+}
+
+#new-group label {
+  white-space: nowrap;
+}
+
+#new-group-name {
+  width: 100%;
+}
+
+#groups {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+#groups .group {
+  padding-left: 8px;
+  border-radius: 4px;
+  background-color: rgb(var(--dark-grey));
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+#groups .group .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#groups .group .controls {
+  flex-shrink: 0;
 }
